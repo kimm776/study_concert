@@ -43,6 +43,39 @@
 </details>
 <br/>
 
+## 패키지 구조
+```
+└── app
+    └── concert
+        └── application
+            └── service
+            └── dto
+        └── domain
+            └── model
+            └── repository
+        └── infrastructure
+            └── jpaRepository
+        └── presentation
+            └── controller
+            └── dto
+└── config
+```
+- app : 애플리케이션의 비즈니스 로직과 기능을 포함하는 패키지
+- config : 애플리케이션의 설정을 관리하는 패키지
+
+## 기술 스택
+- Language
+    - Java 21
+- Framework
+    - Spring Boot
+- DB ORM
+    - JPA
+- Test
+    - JUnit + AssertJ
+- Architecture
+    - Testable Business logics
+    - Layered Architecture Based (+) Clean Architecture
+
 ## Milestone
 🔗 [Milestone 확인](https://github.com/users/kimm776/projects/5/views/6)
 
@@ -168,5 +201,77 @@ sequenceDiagram
         end 
     end
 ```
+
+<br/>
+
+## ERD 설계
+
+```mermaid
+erDiagram
+    TOKEN {
+        long id PK "대기열 ID"
+        long userId FK "사용자 ID"
+        string status "대기열 상태 (wait, success)"
+        datetime createAt "생성일시"
+        datetime updateAt "수정일시"
+    }
+
+    CUSTOMER {
+        long id PK "사용자 ID"
+        Double balance "포인트 잔액"
+    }
+
+    CONCERT {
+        long id PK "콘서트 ID"
+        string title "콘서트 제목"
+        Double price "가격"
+    }
+
+    CONCERT_OPTION {
+        long id PK "콘서트 옵션 ID"
+        long concertId FK "콘서트 ID"
+        datetime reservationDate "예약 가능 날짜"
+        int seats "총 좌석수"
+        int remainSeats "잔여 좌석수"
+    }
+
+    SEAT {
+        long id PK "좌석 ID"
+        long concertOptionId FK "콘서트 옵션 ID"
+        long userId FK "사용자 ID"
+        string seatNumber "좌석 번호"
+        string status "점유 여부 (빈좌석/아님)"
+        datetime createAt "생성일시"
+        datetime updateAt "수정일시"
+    }
+
+    RESERVATION {
+        long id PK "예약 정보 ID"
+        long seatId FK "좌석 ID"
+        long userId FK "사용자 ID"
+        string status "예약 상태 (예약완료, 결제완료, 예약취소)"
+        datetime createAt "생성일시"
+        datetime updateAt "수정일시"
+    }
+
+    PAYMENT {
+        long id PK "결제 ID"
+        long reservationId FK "예약 정보 ID"
+        Double amount "결제액"
+        datetime paymentDate "결제날짜"
+    }
+
+    TOKEN ||--|| CUSTOMER : "1:1"
+    CUSTOMER ||--o{ RESERVATION : "1:N"
+    RESERVATION ||--|| PAYMENT : "1:1"
+    CONCERT ||--o{ CONCERT_OPTION : "1:N"
+    CONCERT_OPTION ||--o{ SEAT : "1:N"
+    SEAT ||--|| RESERVATION : "1:1"
+```
+
+<br/>
+
+## API 명세
+🔗 [API 명세 확인](docs%2FAPI-Specification.md)
 
 <br/>
