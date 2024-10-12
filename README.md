@@ -4,6 +4,7 @@
 - 사용자는 좌석 예약 시 미리 충전한 잔액을 이용합니다.
 - 좌석 예약 요청 시, 결제가 이루어지지 않더라도 일정 시간 동안 다른 유저가 해당 좌석에 접근할 수 없도록 합니다.
 
+<br/>
 
 ## 주요 기능
 <details>
@@ -41,6 +42,7 @@
 - 결제가 완료되면 해당 좌석의 소유권을 유저에게 배정하고 대기열 토큰을 만료시킨다.
 
 </details>
+
 <br/>
 
 ## 패키지 구조
@@ -63,6 +65,8 @@
 - app : 애플리케이션의 비즈니스 로직과 기능을 포함하는 패키지
 - config : 애플리케이션의 설정을 관리하는 패키지
 
+<br/>
+
 ## 기술 스택
 - Language
     - Java 21
@@ -75,6 +79,8 @@
 - Architecture
     - Testable Business logics
     - Layered Architecture Based (+) Clean Architecture
+
+<br/>
 
 ## Milestone
 🔗 [Milestone 확인](https://github.com/users/kimm776/projects/5/views/6)
