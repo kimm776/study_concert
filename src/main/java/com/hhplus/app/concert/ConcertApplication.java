@@ -1,4 +1,4 @@
-package com.hhplus.concert;
+package com.hhplus.app.concert;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
