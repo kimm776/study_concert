@@ -4,7 +4,7 @@
   - **설명** :  대기열을 위한 유저 토큰 발급 요청
   - **Request**
     - **Method** : `POST`
-    - **URL** : `/token`
+    - **URL** : `/users/token`
     - **Parameters**
       ```
         {
@@ -33,7 +33,7 @@
 - **설명** :  특정 콘서트의 예약 가능한 날짜 조회
 - **Request**
     - **Method** : `GET`
-    - **URL** : `/concert/{concertId}/availableDate`
+    - **URL** : `/concerts/{concertId}/available-date`
     - **Parameters**
       ```
         {
@@ -62,7 +62,7 @@
 - **설명** :  특정 콘서트의 예약 가능한 좌석 조회
 - **Request**
     - **Method** : `GET`
-    - **URL** : `/concert/{concertId}/availableSeats`
+    - **URL** : `/concerts/{concertId}/available-seats`
     - **Parameters**
       ```
         {
@@ -93,7 +93,7 @@
 - **설명** :  좌석 예약을 요청
 - **Request**
     - **Method** : `POST`
-    - **URL** : `/reservation`
+    - **URL** : `/reservations`
     - **Parameters**
       ```
         {
@@ -123,7 +123,7 @@
 - **설명** :  유저 포인트를 조회
 - **Request**
     - **Method** : `GET`
-    - **URL** : `/customer/balance`
+    - **URL** : `/customers/point`
     - **Parameters**
       ```
         {
@@ -152,7 +152,7 @@
 - **설명** :  유저 포인트를 충전
 - **Request**
     - **Method** : `PATCH`
-    - **URL** : `/customer/balance`
+    - **URL** : `/customers/point`
     - **Parameters**
       ```
         {
@@ -183,7 +183,7 @@
 - **설명** :  결제를 요청
 - **Request**
     - **Method** : `POST`
-    - **URL** : `/payment`
+    - **URL** : `/payments`
     - **Parameters**
       ```
         {

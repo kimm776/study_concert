@@ -47,23 +47,22 @@
 
 ## 패키지 구조
 ```
-└── app
-    └── concert
+└── concert
+    └── app
         └── application
             └── service
-            └── dto
         └── domain
-            └── model
+            └── dto
             └── repository
         └── infrastructure
+            └── entity
             └── jpaRepository
-        └── presentation
-            └── controller
-            └── dto
-└── config
+        └── interfaces
+            └── api
+    └── config
 ```
-- app : 애플리케이션의 비즈니스 로직과 기능을 포함하는 패키지
-- config : 애플리케이션의 설정을 관리하는 패키지
+- app : 비즈니스 정보를 포함하는 패키지
+- config : 서버 구동을 위한 인프라스트럭쳐 정보를 포함하는 패키지
 
 <br/>
 
@@ -71,9 +70,9 @@
 - Language
     - Java 21
 - Framework
-    - Spring Boot
-- DB ORM
-    - JPA
+    - Spring Boot, Jpa
+- RDBMS
+    - h2
 - Test
     - JUnit + AssertJ
 - Architecture
@@ -216,63 +215,75 @@ sequenceDiagram
 erDiagram
     TOKEN {
         long id PK "대기열 ID"
-        long userId FK "사용자 ID"
-        string status "대기열 상태 (wait, success)"
-        datetime createAt "생성일시"
-        datetime updateAt "수정일시"
+        long user_id FK "사용자 ID"
+        VARCHAR status "대기열 상태 (대기, 성공)"
+        datetime create_at "생성일시"
+        datetime update_at "수정일시"
     }
 
     CUSTOMER {
         long id PK "사용자 ID"
-        Double balance "포인트 잔액"
+        Double point "포인트 잔액"
+    }
+
+    POINT_HISTORY {
+        long id PK "히스토리 ID"
+        long user_id FK "사용자 ID"
+        Double point "포인트 금액"
+        VARCHAR status "결제 상태 (충전, 결제, 환불)"
+        datetime payment_date "결제날짜"
+        datetime create_at "생성일시"
+        datetime update_at "수정일시"
     }
 
     CONCERT {
         long id PK "콘서트 ID"
-        string title "콘서트 제목"
+        VARCHAR title "콘서트 제목"
         Double price "가격"
     }
 
     CONCERT_OPTION {
         long id PK "콘서트 옵션 ID"
-        long concertId FK "콘서트 ID"
-        datetime reservationDate "예약 가능 날짜"
+        long concert_id FK "콘서트 ID"
+        datetime reservation_date "예약 가능 날짜"
         int seats "총 좌석수"
-        int remainSeats "잔여 좌석수"
+        int remain_seats "잔여 좌석수"
     }
 
     SEAT {
         long id PK "좌석 ID"
-        long concertOptionId FK "콘서트 옵션 ID"
-        long userId FK "사용자 ID"
-        string seatNumber "좌석 번호"
-        string status "점유 여부 (빈좌석/아님)"
-        datetime createAt "생성일시"
-        datetime updateAt "수정일시"
+        long concert_option_id FK "콘서트 옵션 ID"
+        long user_id FK "사용자 ID"
+        VARCHAR seat_number "좌석 번호"
+        VARCHAR status "점유 여부 (빈좌석/예약된좌석)"
+        datetime create_at "생성일시"
+        datetime update_at "수정일시"
     }
 
     RESERVATION {
         long id PK "예약 정보 ID"
-        long seatId FK "좌석 ID"
-        long userId FK "사용자 ID"
-        string status "예약 상태 (예약완료, 결제완료, 예약취소)"
-        datetime createAt "생성일시"
-        datetime updateAt "수정일시"
+        long seat_id FK "좌석 ID"
+        long user_id FK "사용자 ID"
+        VARCHAR status "예약 상태 (예약완료, 결제완료, 예약취소)"
+        datetime create_at "생성일시"
+        datetime update_at "수정일시"
     }
 
     PAYMENT {
         long id PK "결제 ID"
-        long reservationId FK "예약 정보 ID"
+        long reservation_id FK "예약 정보 ID"
         Double amount "결제액"
-        datetime paymentDate "결제날짜"
+        datetime payment_date "결제날짜"
+        VARCHAR status "결제 상태 (결제완료, 결제취소)"
     }
 
     TOKEN ||--|| CUSTOMER : "1:1"
+    CUSTOMER ||--o{ POINT_HISTORY : "1:N"
     CUSTOMER ||--o{ RESERVATION : "1:N"
     RESERVATION ||--|| PAYMENT : "1:1"
     CONCERT ||--o{ CONCERT_OPTION : "1:N"
     CONCERT_OPTION ||--o{ SEAT : "1:N"
-    SEAT ||--|| RESERVATION : "1:1"
+    SEAT ||--o{ RESERVATION : "1:N"
 ```
 
 <br/>
