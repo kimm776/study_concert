@@ -56,7 +56,8 @@ public class PaymentFacade {
             throw e;
         }
 
-
+        //대기열 삭제
+        tokenService.deleteById(tokenId);
 
     }
 }

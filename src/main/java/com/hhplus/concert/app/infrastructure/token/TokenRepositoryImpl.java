@@ -68,4 +68,9 @@ public class TokenRepositoryImpl implements TokenRepository {
         return tokenJpaRepository.findById(tokenId)
                 .map(Token::fromEntity);
     }
+
+    @Override
+    public void deleteById(Long tokenId){
+        tokenJpaRepository.deleteById(tokenId);
+    }
 }

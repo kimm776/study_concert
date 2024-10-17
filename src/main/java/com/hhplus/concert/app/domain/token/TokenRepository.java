@@ -22,4 +22,5 @@ public interface TokenRepository {
 
     Optional<Token> findById(Long tokenId);
 
+    void deleteById(Long tokenId);
 }

@@ -79,4 +79,8 @@ public class TokenService {
                 .orElse(false);
     }
 
+    @Transactional
+    public void deleteById(Long tokenId) {
+        tokenRepository.deleteById(tokenId);
+    }
 }
