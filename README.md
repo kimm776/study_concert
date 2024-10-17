@@ -216,30 +216,20 @@ erDiagram
     TOKEN {
         long id PK "대기열 ID"
         long user_id FK "사용자 ID"
-        VARCHAR status "대기열 상태 (대기, 성공)"
+        VARCHAR status "대기열 상태 (WAIT, ACTIVE)"
         datetime create_at "생성일시"
         datetime update_at "수정일시"
     }
 
     CUSTOMER {
         long id PK "사용자 ID"
-        Double point "포인트 잔액"
-    }
-
-    POINT_HISTORY {
-        long id PK "히스토리 ID"
-        long user_id FK "사용자 ID"
-        Double point "포인트 금액"
-        VARCHAR status "결제 상태 (충전, 결제, 환불)"
-        datetime payment_date "결제날짜"
-        datetime create_at "생성일시"
-        datetime update_at "수정일시"
+        double point "포인트 잔액"
     }
 
     CONCERT {
         long id PK "콘서트 ID"
         VARCHAR title "콘서트 제목"
-        Double price "가격"
+        double price "가격"
     }
 
     CONCERT_OPTION {
@@ -247,7 +237,6 @@ erDiagram
         long concert_id FK "콘서트 ID"
         datetime reservation_date "예약 가능 날짜"
         int seats "총 좌석수"
-        int remain_seats "잔여 좌석수"
     }
 
     SEAT {
@@ -255,7 +244,7 @@ erDiagram
         long concert_option_id FK "콘서트 옵션 ID"
         long user_id FK "사용자 ID"
         VARCHAR seat_number "좌석 번호"
-        VARCHAR status "점유 여부 (빈좌석/예약된좌석)"
+        VARCHAR status "점유 여부 (OCCUPIED, AVAILABLE)"
         datetime create_at "생성일시"
         datetime update_at "수정일시"
     }
@@ -264,7 +253,7 @@ erDiagram
         long id PK "예약 정보 ID"
         long seat_id FK "좌석 ID"
         long user_id FK "사용자 ID"
-        VARCHAR status "예약 상태 (예약완료, 결제완료, 예약취소)"
+        VARCHAR status "예약 상태 (RESERVED, PAYMENT, EXPIRED)"
         datetime create_at "생성일시"
         datetime update_at "수정일시"
     }
@@ -274,11 +263,10 @@ erDiagram
         long reservation_id FK "예약 정보 ID"
         Double amount "결제액"
         datetime payment_date "결제날짜"
-        VARCHAR status "결제 상태 (결제완료, 결제취소)"
+        VARCHAR status "결제 상태 (COMPLETE, CANCEL)"
     }
 
     TOKEN ||--|| CUSTOMER : "1:1"
-    CUSTOMER ||--o{ POINT_HISTORY : "1:N"
     CUSTOMER ||--o{ RESERVATION : "1:N"
     RESERVATION ||--|| PAYMENT : "1:1"
     CONCERT ||--o{ CONCERT_OPTION : "1:N"
@@ -290,5 +278,35 @@ erDiagram
 
 ## API 명세
 🔗 [API 명세 확인](docs%2FAPI-Specification.md)
+
+## Swagger
+1. 유저 토큰 발급 API
+<br/>
+
+![토큰(유저토큰발급api)_Swagger.png](src%2Fmain%2Fresources%2Fimages%2F%ED%86%A0%ED%81%B0%28%EC%9C%A0%EC%A0%80%ED%86%A0%ED%81%B0%EB%B0%9C%EA%B8%89api%29_Swagger.png)
+
+2. 예약 가능 날짜/좌석 조회 API
+<br/>
+
+![콘서트(예약가능날짜조회api)_Swagger.png](src%2Fmain%2Fresources%2Fimages%2F%EC%BD%98%EC%84%9C%ED%8A%B8%28%EC%98%88%EC%95%BD%EA%B0%80%EB%8A%A5%EB%82%A0%EC%A7%9C%EC%A1%B0%ED%9A%8Capi%29_Swagger.png)
+![콘서트(예약가능좌석조회api)_Swagger.png](src%2Fmain%2Fresources%2Fimages%2F%EC%BD%98%EC%84%9C%ED%8A%B8%28%EC%98%88%EC%95%BD%EA%B0%80%EB%8A%A5%EC%A2%8C%EC%84%9D%EC%A1%B0%ED%9A%8Capi%29_Swagger.png)
+
+3. 좌석 예약 요청 API
+<br/>
+
+![콘서트(좌석예약요청api)_Swagger.png](src%2Fmain%2Fresources%2Fimages%2F%EC%BD%98%EC%84%9C%ED%8A%B8%28%EC%A2%8C%EC%84%9D%EC%98%88%EC%95%BD%EC%9A%94%EC%B2%ADapi%29_Swagger.png)
+
+4. 포인트 조회/충전 API
+<br/>
+
+![유저(포인트조회api)_Swagger.png](src%2Fmain%2Fresources%2Fimages%2F%EC%9C%A0%EC%A0%80%28%ED%8F%AC%EC%9D%B8%ED%8A%B8%EC%A1%B0%ED%9A%8Capi%29_Swagger.png)
+![유저(포인트충전api)_Swagger.png](src%2Fmain%2Fresources%2Fimages%2F%EC%9C%A0%EC%A0%80%28%ED%8F%AC%EC%9D%B8%ED%8A%B8%EC%B6%A9%EC%A0%84api%29_Swagger.png)
+
+5. 결제 API
+<br/>
+
+![결제(결제api)_Swagger.png](src%2Fmain%2Fresources%2Fimages%2F%EA%B2%B0%EC%A0%9C%28%EA%B2%B0%EC%A0%9Capi%29_Swagger.png)
+
+
 
 <br/>
