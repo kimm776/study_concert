@@ -1,9 +1,9 @@
 package com.hhplus.concert.app.domain.concert;
 
-import com.hhplus.concert.app.domain.concert.Concert;
+import com.hhplus.concert.app.common.exception.CustomException;
+import com.hhplus.concert.app.common.exception.ErrorCode;
 import com.hhplus.concert.app.domain.concert.concertOption.ConcertOption;
 import com.hhplus.concert.app.domain.concert.concertOption.ConcertOptionRepository;
-import com.hhplus.concert.app.domain.concert.ConcertRepository;
 import com.hhplus.concert.app.domain.concert.reservation.Reservation;
 import com.hhplus.concert.app.domain.concert.reservation.ReservationRepository;
 import com.hhplus.concert.app.domain.concert.reservation.ReservationStatus;
@@ -30,10 +30,10 @@ public class ConcertService {
 
     //콘서트 날짜 조회
     @Transactional
-    public List<ConcertOption> getAvailableDates(Long concertId, Long tokenId) {
+    public List<ConcertOption> getAvailableDates(Long concertId) {
         Optional<Concert> concerts = concertRepository.findById(concertId);
         if (concerts.isEmpty()) {
-            throw new IllegalArgumentException("콘서트가 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.NOT_FOUND, "콘서트가 존재하지 않습니다.");
         }
 
         List<ConcertOption> concertOption = concertOptionRepository.findByConcertIdAndReservationDateAfter(concertId);
@@ -43,17 +43,17 @@ public class ConcertService {
 
     //콘서트 좌석 조회
     @Transactional
-    public List<Seat> getAvailableSeats(Long concertOptionId, Long tokenId) {
+    public List<Seat> getAvailableSeats(Long concertOptionId) {
         //콘서트 옵션 아이디 체크
         Optional<ConcertOption> concertOption = concertOptionRepository.findById(concertOptionId);
         if (concertOption.isEmpty()) {
-            throw new IllegalArgumentException("해당 콘서트 옵션이 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.NOT_FOUND, "해당 콘서트 옵션이 존재하지 않습니다.");
         }
 
         //좌석 존재 유무 체크
         List<Seat> seats = seatRepository.findByConcertOptionId(concertOptionId);
         if (seats.isEmpty()) {
-            throw new IllegalArgumentException("해당 콘서트에 대한 좌석이 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.NOT_FOUND, "해당 콘서트에 대한 좌석이 존재하지 않습니다.");
         }
 
         // 잔여 좌석수 체크
@@ -61,7 +61,7 @@ public class ConcertService {
                 .filter(seat -> seat.getStatus() == SeatStatus.OCCUPIED)
                 .count();
         if (occupiedSeatCount >= concertOption.get().getSeats()) {
-            throw new IllegalArgumentException("해당 콘서트의 잔여 좌석이 없습니다.");
+            throw new CustomException(ErrorCode.NOT_FOUND, "해당 콘서트의 잔여 좌석이 없습니다.");
         }
 
         return seats;
@@ -72,10 +72,10 @@ public class ConcertService {
     public Long reserveSeat(Long seatId, Long userId, Long concertId) {
         try {
             Seat seat = seatRepository.findById(seatId)
-                    .orElseThrow(() -> new IllegalArgumentException("좌석이 존재하지 않습니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "좌석이 존재하지 않습니다."));
 
             if (seat.getStatus() == SeatStatus.OCCUPIED) {
-                throw new IllegalStateException("이미 선택된 좌석입니다.");
+                throw new CustomException(ErrorCode.NOT_FOUND, "이미 선택된 좌석입니다.");
             }
 
             //좌석 선점
@@ -92,14 +92,14 @@ public class ConcertService {
             return reservationRepository.saveReservation(reservation);
 
         } catch (OptimisticLockException e) {
-            throw new IllegalStateException("좌석 예약에 실패했습니다. 다른 사용자가 이미 좌석을 예약했을 수 있습니다.");
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "좌석 예약에 실패했습니다. 다른 사용자가 이미 좌석을 예약했을 수 있습니다.");
         }
     }
 
     //예약 내역 조회
     public Reservation findByUserId(Long userId) {
         return reservationRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "예약이 존재하지 않습니다."));
     }
 
     //예약 결제 완료 내역 저장
