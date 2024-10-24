@@ -1,8 +1,8 @@
 package com.hhplus.concert.app.application;
 
-import com.hhplus.concert.app.domain.concert.ConcertOption;
+import com.hhplus.concert.app.domain.concert.concertOption.ConcertOption;
 import com.hhplus.concert.app.domain.concert.ConcertService;
-import com.hhplus.concert.app.domain.concert.Seat;
+import com.hhplus.concert.app.domain.concert.seat.Seat;
 import com.hhplus.concert.app.domain.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,9 +34,9 @@ public class ConcertFacade {
         return concertService.getAvailableSeats(concertOptionId, tokenId);
     }
 
-    public void reserveSeat(Long tokenId, Long seatId, Long userId, Long concertId) {
+    public Long reserveSeat(Long tokenId, Long seatId, Long userId, Long concertId) {
         validateToken(tokenId);
-        concertService.reserveSeat(seatId, userId, concertId);
+        return concertService.reserveSeat(seatId, userId, concertId);
     }
 
     public void removeExpiredReservation() {

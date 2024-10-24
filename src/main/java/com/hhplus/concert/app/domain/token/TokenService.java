@@ -19,19 +19,17 @@ public class TokenService {
 
     //토큰 발급
     @Transactional
-    public Token issueToken(Long userId) {
+    public Long issueToken(Long userId) {
 
         if (tokenRepository.existsByUserId(userId)) {
             throw new IllegalArgumentException("유효하지 않은 접근입니다.");
         }else{
             //대기열 진입
             Token token = new Token(userId, TokenStatus.WAIT, null);
-            Token SavedToken = tokenRepository.saveToQueue(token);
-            System.out.println("대기열 진입 완료 token = " + SavedToken);
+            Long SavedToken = tokenRepository.saveToQueue(token);
 
             //대기번호 확인
             int waitingNum = tokenRepository.findWaitingRankById(userId);
-            System.out.println("내 대기번호는?? >>>>>>>> " + waitingNum + "번");
 
             return SavedToken;
         }
@@ -67,7 +65,6 @@ public class TokenService {
 
         if (expiredTokens != null && !expiredTokens.isEmpty()) {
             tokenRepository.deleteAllExpiredTokens(expiredTokens);
-            System.out.println("대기열에서 삭제된 토큰 개수: " + expiredTokens.size());
         }
     }
 

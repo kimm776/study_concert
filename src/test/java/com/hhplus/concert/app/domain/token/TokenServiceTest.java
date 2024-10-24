@@ -44,15 +44,15 @@ class TokenServiceTest {
     void issueToken_ExistingUser_TokenIssued() {
         // Given
         Long userId = 1L;
+        Long tokenId = 1L;
         Token token = new Token(userId, TokenStatus.WAIT, null);
-        given(tokenRepository.saveToQueue(any(Token.class))).willReturn(token);
+        given(tokenRepository.saveToQueue(any(Token.class))).willReturn(tokenId);
 
         // When
-        Token result = tokenService.issueToken(userId);
+        Long result = tokenService.issueToken(userId);
 
         // Then
         assertThat(token).isNotNull();
-        System.out.println("result = " + result);
     }
 
 }

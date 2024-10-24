@@ -1,5 +1,7 @@
 package com.hhplus.concert.app.domain.customer;
 
+import com.hhplus.concert.app.domain.customer.Customer;
+
 import java.util.Optional;
 
 public interface CustomerRepository {

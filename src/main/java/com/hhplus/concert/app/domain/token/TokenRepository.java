@@ -8,7 +8,7 @@ public interface TokenRepository {
 
     boolean existsByUserId(Long userId);
 
-    Token saveToQueue(Token token);
+    Long saveToQueue(Token token);
 
     int findWaitingRankById(Long userId);
 

@@ -1,5 +1,11 @@
 package com.hhplus.concert.app.domain.concert;
 
+import com.hhplus.concert.app.domain.concert.concertOption.ConcertOption;
+import com.hhplus.concert.app.domain.concert.seat.Seat;
+import com.hhplus.concert.app.domain.concert.seat.SeatStatus;
+import com.hhplus.concert.app.domain.concert.concertOption.ConcertOptionRepository;
+import com.hhplus.concert.app.domain.concert.reservation.ReservationRepository;
+import com.hhplus.concert.app.domain.concert.seat.SeatRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

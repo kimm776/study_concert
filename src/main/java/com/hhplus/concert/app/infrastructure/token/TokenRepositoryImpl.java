@@ -23,9 +23,9 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public Token saveToQueue(Token token) {
+    public Long saveToQueue(Token token) {
         TokenEntity entity = tokenJpaRepository.save(token.toEntity());
-        return Token.fromEntity(entity);
+        return entity.getId();
     }
 
     @Override

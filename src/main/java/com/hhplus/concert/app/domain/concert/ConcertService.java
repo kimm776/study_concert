@@ -1,5 +1,15 @@
 package com.hhplus.concert.app.domain.concert;
 
+import com.hhplus.concert.app.domain.concert.Concert;
+import com.hhplus.concert.app.domain.concert.concertOption.ConcertOption;
+import com.hhplus.concert.app.domain.concert.concertOption.ConcertOptionRepository;
+import com.hhplus.concert.app.domain.concert.ConcertRepository;
+import com.hhplus.concert.app.domain.concert.reservation.Reservation;
+import com.hhplus.concert.app.domain.concert.reservation.ReservationRepository;
+import com.hhplus.concert.app.domain.concert.reservation.ReservationStatus;
+import com.hhplus.concert.app.domain.concert.seat.Seat;
+import com.hhplus.concert.app.domain.concert.seat.SeatRepository;
+import com.hhplus.concert.app.domain.concert.seat.SeatStatus;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,7 +69,7 @@ public class ConcertService {
 
     //좌석 예약 요청
     @Transactional
-    public void reserveSeat(Long seatId, Long userId, Long concertId) {
+    public Long reserveSeat(Long seatId, Long userId, Long concertId) {
         try {
             Seat seat = seatRepository.findById(seatId)
                     .orElseThrow(() -> new IllegalArgumentException("좌석이 존재하지 않습니다."));
@@ -79,7 +89,7 @@ public class ConcertService {
             // 예약 정보 생성
             Optional<Concert> concert = concertRepository.findById(concertId);
             Reservation reservation = new Reservation(seatId, userId, ReservationStatus.RESERVED, concert.get().getPrice(), LocalDateTime.now());
-            reservationRepository.saveReservation(reservation);
+            return reservationRepository.saveReservation(reservation);
 
         } catch (OptimisticLockException e) {
             throw new IllegalStateException("좌석 예약에 실패했습니다. 다른 사용자가 이미 좌석을 예약했을 수 있습니다.");
@@ -94,8 +104,8 @@ public class ConcertService {
 
     //예약 결제 완료 내역 저장
     @Transactional
-    public void saveReservation(Reservation reservation) {
-        reservationRepository.saveReservation(reservation);
+    public Long saveReservation(Reservation reservation) {
+        return reservationRepository.saveReservation(reservation);
     }
 
     //만료된 예약내역 삭제 (좌석 선점 후 5분내에 결제하지 않는 경우)
@@ -106,7 +116,6 @@ public class ConcertService {
 
         if (expiredReservation != null && !expiredReservation.isEmpty()) {
             reservationRepository.deleteAllExpiredReservation(expiredReservation);
-            System.out.println("만료된 예약 삭제 개수: " + expiredReservation.size());
         }
     }
 }
