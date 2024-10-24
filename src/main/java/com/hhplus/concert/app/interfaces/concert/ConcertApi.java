@@ -26,7 +26,7 @@ public interface ConcertApi {
             }
     )
     @GetMapping("/{concertId}/available-date")
-    ResponseEntity<ConcertOptionResponse> getAvailableDates(@PathVariable Long concertId, @RequestParam Long tokenId);
+    ResponseEntity<ConcertOptionResponse> getAvailableDates(@PathVariable Long concertId);
 
     @Operation(
             summary = "예약 가능 좌석 조회 api",
@@ -38,7 +38,7 @@ public interface ConcertApi {
             }
     )
     @GetMapping("/{concertOptionId}/available-seats")
-    ResponseEntity<SeatResponse> getAvailableSeats(@PathVariable Long concertOptionId, @RequestParam Long tokenId);
+    ResponseEntity<SeatResponse> getAvailableSeats(@PathVariable Long concertOptionId);
 
 
     @Operation(

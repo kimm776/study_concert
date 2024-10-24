@@ -1,5 +1,8 @@
 package com.hhplus.concert.app.domain.token;
 
+import com.hhplus.concert.app.common.exception.CustomException;
+import com.hhplus.concert.app.common.exception.ErrorCode;
+import com.hhplus.concert.app.infrastructure.token.TokenEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,7 @@ public class TokenService {
     public Long issueToken(Long userId) {
 
         if (tokenRepository.existsByUserId(userId)) {
-            throw new IllegalArgumentException("유효하지 않은 접근입니다.");
+            throw new CustomException(ErrorCode.NOT_FOUND, "유효하지 않은 접근입니다.");
         }else{
             //대기열 진입
             Token token = new Token(userId, TokenStatus.WAIT, null);
@@ -74,6 +77,13 @@ public class TokenService {
         return tokenRepository.findById(tokenId)
                 .map(token -> token.getStatus() == TokenStatus.ACTIVE)
                 .orElse(false);
+    }
+
+    // 토큰 조회
+    @Transactional
+    public Token checkToken(Long tokenId) {
+        return tokenRepository.findById(tokenId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "유효하지 않은 접근입니다."));
     }
 
     @Transactional

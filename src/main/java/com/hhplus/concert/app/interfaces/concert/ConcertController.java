@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,18 +22,18 @@ public class ConcertController implements ConcertApi {
     private final ConcertFacade concertFacade;
 
     @Override
-    public ResponseEntity<ConcertOptionResponse> getAvailableDates(@PathVariable Long concertId, @RequestParam Long tokenId) {
+    public ResponseEntity<ConcertOptionResponse> getAvailableDates(@PathVariable Long concertId) {
 
-        List<ConcertOption> concertOptions = concertFacade.getAvailableDates(concertId, tokenId);
+        List<ConcertOption> concertOptions = concertFacade.getAvailableDates(concertId);
         ConcertOptionResponse response = new ConcertOptionResponse(concertOptions);
         return ResponseEntity.ok(response);
 
     }
 
     @Override
-    public ResponseEntity<SeatResponse> getAvailableSeats(@PathVariable Long concertOptionId, @RequestParam Long tokenId) {
+    public ResponseEntity<SeatResponse> getAvailableSeats(@PathVariable Long concertOptionId) {
 
-        List<Seat> seats = concertFacade.getAvailableSeats(concertOptionId, tokenId);
+        List<Seat> seats = concertFacade.getAvailableSeats(concertOptionId);
         SeatResponse response = new SeatResponse(seats);
         return ResponseEntity.ok(response);
 
@@ -42,7 +41,7 @@ public class ConcertController implements ConcertApi {
 
     @Override
     public ResponseEntity<ReservationResponse> reserveSeat(@RequestBody ReserveRequest request) {
-        return ResponseEntity.ok(new ReservationResponse(concertFacade.reserveSeat(request.getTokenId(), request.getSeatId(), request.getUserId(), request.getConcertId())));
+        return ResponseEntity.ok(new ReservationResponse(concertFacade.reserveSeat(request.getSeatId(), request.getUserId(), request.getConcertId())));
 
     }
 }

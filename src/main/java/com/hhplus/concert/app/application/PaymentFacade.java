@@ -1,5 +1,7 @@
 package com.hhplus.concert.app.application;
 
+import com.hhplus.concert.app.common.exception.CustomException;
+import com.hhplus.concert.app.common.exception.ErrorCode;
 import com.hhplus.concert.app.domain.concert.ConcertService;
 import com.hhplus.concert.app.domain.concert.reservation.Reservation;
 import com.hhplus.concert.app.domain.customer.CustomerService;
@@ -20,16 +22,16 @@ public class PaymentFacade {
     private final TokenService tokenService;
 
     //토큰 만료 확인
-    private void validateToken(Long tokenId) {
-        boolean isTokenValid = tokenService.isValidToken(tokenId);
-        if (!isTokenValid) {
-            throw new IllegalArgumentException("토큰이 만료되었습니다.");
-        }
-    }
+//    private void validateToken(Long tokenId) {
+//        boolean isTokenValid = tokenService.isValidToken(tokenId);
+//        if (!isTokenValid) {
+//            throw new CustomException(ErrorCode.NOT_FOUND, "토큰이 만료되었습니다.");
+//        }
+//    }
 
     @Transactional
     public Long payInPoint(Long tokenId, Long userId, Long reservationId) {
-        validateToken(tokenId);
+//        validateToken(tokenId);
         //예약정보 확인
         Reservation reservation = null;
         try {
